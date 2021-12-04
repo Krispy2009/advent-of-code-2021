@@ -20,7 +20,6 @@ def make_marked_boards(boards):
             for k, num in enumerate(line):
 
                 marked_boards[i][j][k] = 0
-    print(marked_boards)
     return marked_boards
 
 
@@ -30,24 +29,26 @@ def mark_board(number, boards, marked_boards):
         for j, line in enumerate(board):
             for k, num in enumerate(line):
                 if num == number:
-                    print(f"match! board: {i}, line: {j}, idx: {k}")
                     marked_boards[i][j][k] = 1
-    print(marked_boards)
     return marked_boards
 
 
-def check_boards_for_win(marked_boards):
+def check_boards_for_win(marked_boards, already_marked=None):
+    if already_marked is None:
+        already_marked = []
     for b, board in enumerate(marked_boards):
+        if b in already_marked:
+            continue
         for col_idx in range(5):
             col_sum = 0
             for l, line in enumerate(board):
                 if sum(line) == 5:
-                    print("BINGO!")
+                    print(f"ROW BINGO! {board}")
                     return b, board
                 else:
                     col_sum += line[col_idx]
                     if col_sum == 5:
-                        print("BINGO!")
+                        print(f"COLUMN BINGO! {board}")
                         return b, board
     return (None, None)
 
@@ -63,10 +64,18 @@ def part1(marked_boards):
                 exit()
 
 
+def any_more_marked_wins(marked_boards):
+    boards_to_pop = []
+    for board in marked_boards:
+        w, _ = check_boards_for_win(marked_boards, already_marked=boards_to_pop)
+        if w is not None:
+            print(f"Adding {w} to boards to pop")
+            boards_to_pop.append(w)
+    return reversed(boards_to_pop)
+
+
 def part2(marked_boards):
     for idx, number in enumerate(numbers):
-        print(f"{len(boards)}, {len(marked_boards)}")
-
         marked_boards = mark_board(number, boards, marked_boards)
         if idx > 5:
             w, _ = check_boards_for_win(marked_boards)
@@ -75,7 +84,14 @@ def part2(marked_boards):
                 print(f"ANS: {score*number}")
                 boards.pop(w)
                 marked_boards.pop(w)
-                print("pop pop poppin")
+            boards_to_pop = any_more_marked_wins(marked_boards)
+            for b in boards_to_pop:
+                print(f"----Will be Poppin  extras-------")
+                # score = calculate_score(boards[w], marked_boards[w])
+                # print(f"popped ANS: {score*number}")
+
+                boards.pop(b)
+                marked_boards.pop(b)
 
 
 with open("input.txt") as f:
