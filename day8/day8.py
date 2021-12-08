@@ -9,6 +9,20 @@ def part1():
                     count += 1
     print(count)
 
+def deduce_last_num(digits, numbers):
+    for i in range(10):
+        if i not in numbers:
+            for d in digits:
+                if digits[d] is None:
+                    # d is the ;cfdgd; we want and i is the missing number
+                    digits[d] = i
+                    numbers[i] = d
+                    print(f"missing num: {i}")
+                    return digits, numbers
+    return digits, numbers
+
+
+
 def part2():
     output = []
     total = 0
@@ -18,11 +32,11 @@ def part2():
             digits = {}
             numbers = {}
             patterns, output = line.split(' | ')
-            while len(digits) != 10:
+            while len(digits) != 10:                    
                 for o in patterns.split():
                     o = ''.join(sorted(o))
-                    if digits.get(o) is not None:
-                        continue
+                    # if digits.get(o) is not None:
+                    #     continue
                     if len(o) == 2:
                         digits[o] = 1
                         numbers[1] = o
@@ -63,6 +77,10 @@ def part2():
                                         digits[o] = 0
                                         numbers[0] = o
                     print(f'{o} is {digits.get(o)}')
+                    if digits.get(o) is None and len(digits) == 9:
+                        digits[o] = None
+                        digits, numbers = deduce_last_num(digits, numbers)
+
             print(digits)
             num_str = ''
             for out in output.split():
