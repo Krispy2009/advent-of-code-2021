@@ -65,10 +65,9 @@ def part1():
         if instruction[0] == 'x':
             data = fold_v(int(instruction[1]), data)
         
-        print_grid(data)
-        break
+    print_grid(data)
 
-    print(sum([1 for o in data.values() if o is not None]))
+    # print(sum([1 for o in data.values() if o is not None]))
 
 if __name__ == "__main__":
     part1()
