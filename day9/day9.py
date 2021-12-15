@@ -1,3 +1,4 @@
+import math
 from pprint import pprint
 
 def find_adj(idx, grid):
@@ -19,13 +20,28 @@ def find_adj(idx, grid):
 
 def score_points(points, cave):
     score = 0
-    print(points)
-    import pdb; pdb.set_trace()
-    while points:
-        x,y = points.pop()
+    pts = {i for i in points}
+    while pts:
+        x,y = pts.pop()
         score += cave[x][y] + 1
-    print(f"Part1: {score}")
+    print(f"Part 1: {score}")
 
+def find_basins(low_point, cave):
+    basin = set()
+    adj = find_adj(low_point, cave)
+    
+    while adj:
+        (x,y) = adj.pop()
+        if cave[x][y] == 9:
+           adj = adj - set([(x,y)])
+        else:
+            basin.add((x,y))
+            new_adj = find_adj((x,y), cave)
+            for i in new_adj:
+                if i not in basin:
+                    adj.add(i)
+    return basin
+    
 
 with open('input.txt') as f:
     cave = []
@@ -48,8 +64,15 @@ with open('input.txt') as f:
                     adj = adj - set([(x,y)])
                     if len(adj) == 0:
                         low_points.add((i,j))
-
+       
     score_points(low_points, cave)
+    basin_scores = []
+    for pt in low_points:
+        
+        basin = find_basins(pt, cave)
+        basin_scores.append(len(basin))
+
+    print(f"Part 2: {math.prod(sorted(basin_scores,  reverse=True)[:3])}")
             
 
 
