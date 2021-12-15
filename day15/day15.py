@@ -48,8 +48,55 @@ def part1():
             for y in range(len(grid[0])):
                 graph[(x,y)] = find_adj((x,y), grid)
         end = (len(grid)-1, len(grid[0])-1)
-        path = find_shortest_path((0,0), end, graph)
+        find_shortest_path((0,0), end, graph)
+
+def expand_grid(grid):
+    new_grid = []
+    for row in grid:
+        new_row = []
+        for i in range (1,6):
+            for item in row:
+                new_number = (item+i-1)
+                if new_number > 9:
+                    new_number = (new_number%10) + 1
+                new_row.append(new_number)
+        new_grid.append(new_row)
+    newer_grid = []
+
+    for i in range(5):
+        for row in new_grid:
+            newer_row = []
+            for item in row:
+                new_number = (item+i)
+                if new_number > 9:
+                    new_number = (new_number%10) + 1
+                newer_row.append(new_number)
+            newer_grid.append(newer_row)
+
+
+    return newer_grid
+
+
+
+
+def part2():
+    grid = []
+    graph = {}
+    with open('input.txt') as f:
+        for line in f.readlines():
+            row = [int(i) for i in line.strip()]
+            grid.append(row)
+
+        grid = expand_grid(grid)
+        
+        for x in range(len(grid)):
+            for y in range(len(grid[0])):
+                graph[(x,y)] = find_adj((x,y), grid)
+
+        end = (len(grid)-1, len(grid[0])-1)
+
+        find_shortest_path((0,0), end, graph)
 
     
 if __name__ == '__main__':
-    part1()
+    part2()
