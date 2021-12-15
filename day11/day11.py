@@ -23,7 +23,7 @@ def part1():
                 row.append(int(octo))
             grid.append(row)
 
-    for step in range(100):
+    for step in range(500):
         # Energy level inc by 1
         for i, row in enumerate(grid):
             for j, o in enumerate(row):
@@ -49,7 +49,17 @@ def part1():
         if step%10 == 0:
             print(f'After step {step+1}')
         pprint(grid)
+
+        if are_sync(grid):
+            print(f'Part 2: SYNC AT STEP {step+1}')
+            exit()
         print(flashes)
+
+def are_sync(grid):
+    for row in grid:
+        if  any(row):
+            return False
+    return True
 
 def find_adj(idx, grid):
     x,y = idx
