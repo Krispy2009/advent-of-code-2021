@@ -35,7 +35,7 @@ def decode_hex(hex_num):
         
 
 def decode_operator(binary, op_type_id):
-    INTERNAL_REG = {OPS[op_type_id]: []}
+    REGISTER = {OPS[op_type_id]: []}
     length_type_id, binary = binary[0], binary[1:]
     if length_type_id == '0':
         # sub_packet_length = 15
@@ -50,11 +50,10 @@ def decode_operator(binary, op_type_id):
 
             if type_id == '100':
                 binary, val = decode_literals(binary)
-                INTERNAL_REG[OPS[op_type_id]].append(val)
+                REGISTER[OPS[op_type_id]].append(val)
             else:
-                REGISTER.append(OPS[type_id])
                 binary,val  = decode_operator(binary, type_id)
-                INTERNAL_REG[OPS[op_type_id]].append(val)
+                REGISTER[OPS[op_type_id]].append(val)
 
             total_length_in_bits -= 6
             total_length_in_bits -= (old_bin_length - len(binary))
@@ -69,15 +68,14 @@ def decode_operator(binary, op_type_id):
 
             if type_id == '100':
                 binary, val = decode_literals(binary)
-                INTERNAL_REG[OPS[op_type_id]].append(val)
+                REGISTER[OPS[op_type_id]].append(val)
 
             else:
-                REGISTER.append(OPS[type_id])
                 binary, val = decode_operator(binary, type_id)
-                INTERNAL_REG[OPS[op_type_id]].append(val)
+                REGISTER[OPS[op_type_id]].append(val)
             number_of_sub_packets -= 1
           
-    return binary, calc_reg(INTERNAL_REG)  
+    return binary, calc_reg(REGISTER)  
 
 def calc_reg(reg):
  
@@ -106,8 +104,6 @@ def decode_literals(binary):
             full_bin += number[1:]
             if number[0] == '0':
                 # print(f"Found literal {int(full_bin, base=2)}")
-                REGISTER.append(int(full_bin, base=2))
-
                 return binary[offset+5:], int(full_bin, base=2)
         offset +=5
     return binary, int(full_bin, base=2)
@@ -143,7 +139,6 @@ OPS = {
     '111' : '=',
     '100': 'literal'
     }
-REGISTER =[]
 
 def part2(hexnum):
     binary = decode_hex(hexnum)
@@ -154,19 +149,18 @@ def part2(hexnum):
         version, binary = binary[:3], binary[3:]
         type_id, binary = binary[:3], binary[3:]
         # print(f'packet version: {version}, type: {type_id}, {binary}')
-        INTERNAL_REG = {OPS[type_id]: []}
+        REGISTER = {OPS[type_id]: []}
         VERSIONS.append(version)
         if type_id == '100':
             binary, val = decode_literals(binary)
-            INTERNAL_REG[OPS[type_id]].append(val)
+            REGISTER[OPS[type_id]].append(val)
 
         else:
-            REGISTER.append(OPS[type_id])
             binary, val=decode_operator(binary, type_id)
-            INTERNAL_REG[OPS[type_id]].append(val)
+            REGISTER[OPS[type_id]].append(val)
 
     print('===================================')
-    print(f'{INTERNAL_REG}')
+    print(f'{REGISTER}')
     print('===================================')
 
 if __name__ == '__main__':
