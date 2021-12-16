@@ -110,10 +110,12 @@ def decode_literals(binary):
 
 VERSIONS = []
 def part1(hexnum):
+    global VERSIONS
+    VERSIONS = []
+
     binary = decode_hex(hexnum)
     length = len(binary) + (4 - (len(binary)%4))%4
     binary = binary.zfill(length)
-
     # import pdb; pdb.set_trace()
     while '1' in binary:
         version, binary = binary[:3], binary[3:]
@@ -124,7 +126,7 @@ def part1(hexnum):
             binary, _ = decode_literals(binary)
         else:
             print('Operator')
-            binary=decode_operator(binary)
+            binary=decode_operator(binary, type_id)
     print('===================================')
     print(f'{VERSIONS} -> {sum([int(i, base=2) for i in VERSIONS])}')
     print('===================================')
@@ -164,21 +166,21 @@ def part2(hexnum):
     print('===================================')
 
 if __name__ == '__main__':
-    # part1(example1)
-    # part1(example2)
-    # part1(example3)
-    # part1(example4)
-    # part1(example5)
-    # part1(example6)
-    # part1(example7)
-    # part1(inp)
+    part1(example1)
+    part1(example2)
+    part1(example3)
+    part1(example4)
+    part1(example5)
+    part1(example6)
+    part1(example7)
+    part1(inp)
     
-    # part2(example8)
-    # part2(example9)
-    # part2(example10)
-    # part2(example11)
-    # part2(example12)
-    # part2(example13)
-    # part2(example14)
-    # part2(example15)
+    part2(example8)
+    part2(example9)
+    part2(example10)
+    part2(example11)
+    part2(example12)
+    part2(example13)
+    part2(example14)
+    part2(example15)
     part2(inp)
