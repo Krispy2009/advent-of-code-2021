@@ -1,22 +1,43 @@
 import pdb; 
 import math
 example = [[1,1], [2,2], [3,3], [4,4]]
-homework = []
 def part1():
+    homework = []
     with open('input.txt') as f: 
         for line in f.readlines():
             homework.append(eval(line.strip()))
-    print (len(homework)) 
     sn = SnailfishNumber(homework[0], 0, None)
     for line in homework[1:]:
         new_sn = SnailfishNumber(line, 0, None)
-        print(f"  {sn}")
-        print(f"+ {new_sn}")
         sn = add(sn, new_sn)
-        print(f"= {sn}")
-        print()
 
     print(f"Magnitude: {magnitude(sn)}")
+
+
+def part2():
+    homework = []
+
+    with open('input.txt') as f: 
+        for line in f.readlines():
+            homework.append(eval(line.strip()))
+    sns = []
+    mags = []
+    for line in homework:
+        sns.append(line)
+    count = 0
+    print(sns)
+    print(len(sns))
+    for x in sns:
+        for y in sns:
+            if x != y:
+                a = SnailfishNumber(x, 0, None)
+                b = SnailfishNumber(y, 0, None)
+                n1 = add(a,b)
+                m1 = magnitude(n1)
+                print(f'{x} + {y} = {m1}')
+                mags.append(m1)
+    print(f"Highest magnitude: {max(mags)}")
+
 
 
 
@@ -172,7 +193,7 @@ class SnailfishNumber():
             node = self.find_node_to_explode()
             if node and node.should_explode():
                 node.explode()
-                print('After explode: ', self)
+                # print('After explode: ', self)
                 continue
 
             node = self.find_node_to_split()
@@ -186,7 +207,7 @@ class SnailfishNumber():
                 else:
                     node.parent.right = new_node
                 
-                print('After split: ', self)
+                # print('After split: ', self)
 
                 continue
             if not self.should_explode() and not self.should_split():
@@ -254,3 +275,4 @@ def add(num1, num2):
 
 if __name__ == "__main__":
     part1()
+    part2()
